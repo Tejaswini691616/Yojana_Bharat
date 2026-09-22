@@ -1,0 +1,28 @@
+{# PATH: GovScheme/templates/chatbot/_widget.html #}
+<button id="sgChatFab" aria-label="Open SmartGov AI chatbot"><i class="bi bi-chat-dots"></i></button>
+
+<div id="sgChatPanel" class="sg-chat-panel">
+  <div class="sg-chat-header">
+    <div><i class="bi bi-robot"></i> <strong>SmartGov AI Assistant</strong></div>
+    <div>
+      <button id="sgChatClear" class="btn btn-sm btn-link text-white text-decoration-none" title="Clear chat">Clear</button>
+      <button id="sgChatClose" class="btn btn-sm btn-link text-white text-decoration-none" aria-label="Close chat"><i class="bi bi-x-lg"></i></button>
+    </div>
+  </div>
+  <div class="px-2 pt-2">
+    <select id="sgChatLanguage" class="form-select form-select-sm" aria-label="Chat language">
+      <option>English</option><option>Hindi</option><option>Bengali</option><option>Tamil</option>
+      <option>Telugu</option><option>Marathi</option><option>Gujarati</option><option>Kannada</option>
+      <option>Malayalam</option><option>Punjabi</option><option>Odia</option><option>Assamese</option>
+    </select>
+  </div>
+  <div id="sgChatMessages" class="sg-chat-messages" aria-live="polite">
+    <div class="sg-chat-bubble bot">Hi! Ask me about scheme eligibility, recommendations, or how to apply. This is prototype guidance only - always verify with the official source.</div>
+  </div>
+  <div class="px-2 text-muted small" id="sgChatStatus"></div>
+  <div class="sg-chat-input-row">
+    <button id="sgChatMic" class="btn btn-outline-secondary btn-sm" aria-label="Voice input" title="Voice input"><i class="bi bi-mic"></i></button>
+    <input id="sgChatInput" type="text" class="form-control form-control-sm" placeholder="Type your question...">
+    <button id="sgChatSend" class="btn btn-sm btn-success" aria-label="Send message"><i class="bi bi-send"></i></button>
+  </div>
+</div>

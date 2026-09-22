@@ -1,0 +1,55 @@
+{# PATH: GovScheme/templates/layouts/dashboard_base.html #}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SmartGov AI{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/variables.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/reset.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/typography.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/dashboard.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<nav class="sg-sidebar">
+  <div class="brand"><i class="bi bi-shield-check"></i> SmartGov AI</div>
+  <a href="{{ url_for('dashboard.dashboard_home') }}" class="{{ 'active' if request.endpoint == 'dashboard.dashboard_home' }}"><i class="bi bi-house"></i> Dashboard</a>
+  <a href="{{ url_for('scheme.schemes_list') }}" class="{{ 'active' if request.endpoint == 'scheme.schemes_list' }}"><i class="bi bi-journal-text"></i> Schemes</a>
+  <a href="{{ url_for('application.applications_list') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('application.') }}"><i class="bi bi-send"></i> Applications</a>
+  <a href="{{ url_for('scheme.saved_schemes_list') }}" class="{{ 'active' if request.endpoint == 'scheme.saved_schemes_list' }}"><i class="bi bi-heart"></i> Saved Schemes</a>
+  <a href="{{ url_for('notification.notifications_list') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('notification.') }}">
+    <i class="bi bi-bell"></i> Notifications
+    {% if unread_notifications %}<span class="badge bg-danger ms-1">{{ unread_notifications }}</span>{% endif %}
+  </a>
+  <a href="{{ url_for('profile.profile_view') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('profile.') }}"><i class="bi bi-person"></i> Profile</a>
+  <a href="{{ url_for('admin.admin_home') }}"><i class="bi bi-gear"></i> Admin</a>
+  <a href="#"><i class="bi bi-question-circle"></i> Help &amp; Support</a>
+  <a href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+</nav>
+
+<div class="sg-main">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category=='danger' else category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+
+{% include "chatbot/_widget.html" %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

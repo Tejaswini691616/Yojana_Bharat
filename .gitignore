@@ -1,0 +1,7 @@
+# PATH: GovScheme/.gitignore
+venv/
+__pycache__/
+*.pyc
+.env
+database/SmartGov_AI.db
+ml_models/*.joblib

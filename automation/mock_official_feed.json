@@ -1,0 +1,22 @@
+[
+  {
+    "scheme_id": "S002",
+    "scheme_name": "Ayushman Bharat PM-JAY",
+    "category": "Health & Wellness",
+    "eligibility": "Annual family income up to ₹300,000; BPL status required",
+    "min_age": null,
+    "max_age": null,
+    "income_limit": 300000,
+    "caste_requirement": null
+  },
+  {
+    "scheme_id": "S021",
+    "scheme_name": "Demo New Skill Development Scheme (Prototype)",
+    "category": "Skills & Employment",
+    "eligibility": "Age 18-45; annual family income up to ₹400,000",
+    "min_age": 18,
+    "max_age": 45,
+    "income_limit": 400000,
+    "caste_requirement": null
+  }
+]

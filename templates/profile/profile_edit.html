@@ -1,0 +1,86 @@
+{# PATH: GovScheme/templates/profile/profile_edit.html #}
+{% extends "layouts/dashboard_base.html" %}
+{% block title %}Edit Profile - SmartGov AI{% endblock %}
+{% block content %}
+<h4 class="mb-3">Edit Profile</h4>
+
+<div class="card border-0 shadow-sm p-4" style="border-radius: var(--sg-radius);">
+<form method="post">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Full Name</label>
+      <input type="text" name="full_name" class="form-control" value="{{ user.full_name }}">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Phone</label>
+      <input type="text" name="phone" class="form-control" value="{{ user.phone or '' }}">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Gender</label>
+      <select name="gender" class="form-select">
+        {% for g in ['Male','Female'] %}
+        <option {{ 'selected' if user.gender == g }}>{{ g }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Age</label>
+      <input type="number" name="age" class="form-control" value="{{ user.age or '' }}">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Annual Family Income (₹)</label>
+      <input type="number" name="annual_income" class="form-control" value="{{ user.annual_income or '' }}">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">State</label>
+      <input type="text" name="state" class="form-control" value="{{ user.state or '' }}">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">District</label>
+      <input type="text" name="district" class="form-control" value="{{ user.district or '' }}">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Education</label>
+      <select name="education" class="form-select">
+        {% for e in ['Below 10th','10th Pass','12th Pass','Diploma','Graduate','Post Graduate'] %}
+        <option {{ 'selected' if user.education == e }}>{{ e }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Occupation</label>
+      <input type="text" name="occupation" class="form-control" value="{{ user.occupation or '' }}">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Caste Category</label>
+      <select name="caste" class="form-select">
+        {% for c in ['General','OBC','SC','ST'] %}
+        <option {{ 'selected' if user.caste == c }}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Land Holding (acres)</label>
+      <input type="number" step="0.1" name="land_holding_acres" class="form-control" value="{{ user.land_holding_acres or 0 }}">
+    </div>
+  </div>
+
+  <hr class="my-4">
+  <div class="row g-3">
+    {% for field, label in [('farmer','Farmer'), ('student','Student'), ('bpl','BPL Card Holder'),
+                              ('disabled','Person with Disability'), ('senior_citizen','Senior Citizen'),
+                              ('widow','Widow')] %}
+    <div class="col-md-4">
+      <label class="form-label">{{ label }}</label>
+      <select name="{{ field }}" class="form-select">
+        <option value="No" {{ 'selected' if user[field] == 'No' }}>No</option>
+        <option value="Yes" {{ 'selected' if user[field] == 'Yes' }}>Yes</option>
+      </select>
+    </div>
+    {% endfor %}
+  </div>
+
+  <button type="submit" class="btn btn-success mt-4"><i class="bi bi-check2"></i> Save Changes</button>
+</form>
+</div>
+{% endblock %}

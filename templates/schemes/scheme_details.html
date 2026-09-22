@@ -1,0 +1,56 @@
+{# PATH: GovScheme/templates/schemes/scheme_details.html #}
+{% extends "layouts/dashboard_base.html" %}
+{% block title %}{{ scheme.scheme_name }} - SmartGov AI{% endblock %}
+{% block content %}
+
+<a href="{{ url_for('scheme.schemes_list') }}" class="text-muted-sg small"><i class="bi bi-arrow-left"></i> Back to Schemes</a>
+
+<div class="card border-0 shadow-sm mt-3 p-4" style="border-radius: var(--sg-radius);">
+  <div class="d-flex justify-content-between align-items-start">
+    <div class="d-flex align-items-center gap-3">
+      <img class="sg-scheme-logo" style="width:64px;height:64px;" src="{{ url_for('static', filename='images/schemes/' ~ scheme.scheme_id ~ '.png') }}"
+           onerror="this.src='{{ url_for('static', filename='images/schemes/default.png') }}'">
+      <div>
+        <h3 class="mb-1">{{ scheme.scheme_name }}</h3>
+        <span class="text-muted-sg">{{ scheme.category }}</span>
+      </div>
+    </div>
+    <form method="post" action="{{ url_for('scheme.unsave_scheme' if is_saved else 'scheme.save_scheme', scheme_id=scheme.scheme_id) }}">
+      <button class="heart-btn {{ 'active' if is_saved }}" style="font-size:1.6rem;" type="submit"><i class="bi bi-heart-fill"></i></button>
+    </form>
+  </div>
+
+  <span class="badge {{ 'badge-eligible' if result.is_eligible else 'badge-ineligible' }} mt-3" style="width:fit-content;">
+    {{ 'Potentially Eligible' if result.is_eligible else 'Not Eligible' }}
+  </span>
+
+  <h6 class="mt-4">Why You Are {{ 'Potentially Eligible' if result.is_eligible else 'Not Currently Eligible' }}</h6>
+  <pre class="small" style="white-space: pre-wrap; font-family: inherit;">{{ result.explanation_text() }}</pre>
+
+  <h6 class="mt-3">Description</h6>
+  <p>{{ scheme.description or 'Not specified in dataset.' }}</p>
+
+  <h6 class="mt-3">Configured Eligibility Criteria</h6>
+  <p>{{ scheme.eligibility or 'Not specified in dataset.' }}</p>
+
+  <h6 class="mt-3">Official Link</h6>
+  <p>
+    {% if scheme.official_link %}
+      <a href="{{ scheme.official_link }}" target="_blank">{{ scheme.official_link }}</a>
+    {% else %}
+      Official link not available in current dataset.
+    {% endif %}
+  </p>
+
+  <form method="post" action="{{ url_for('application.apply_now', scheme_id=scheme.scheme_id) }}" class="mt-3">
+    <button type="submit" class="btn btn-success" {{ 'disabled' if not result.is_eligible }}>
+      <i class="bi bi-send"></i> Apply Now
+    </button>
+    {% if not result.is_eligible %}
+      <div class="small text-muted-sg mt-2">Apply Now is disabled because you do not currently meet the configured prototype criteria for this scheme.</div>
+    {% endif %}
+  </form>
+
+  <div class="alert alert-warning mt-4 small mb-0">{{ disclaimer }}</div>
+</div>
+{% endblock %}

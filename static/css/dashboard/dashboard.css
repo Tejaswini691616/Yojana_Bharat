@@ -1,0 +1,125 @@
+/* PATH: GovScheme/static/css/dashboard/dashboard.css */
+
+.sg-sidebar {
+  width: var(--sg-sidebar-width);
+  background: var(--sg-primary-dark);
+  min-height: 100vh;
+  padding: 24px 0;
+  position: fixed;
+  top: 0; left: 0;
+}
+.sg-sidebar .brand {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 0 20px 24px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sg-sidebar a {
+  display: flex; align-items: center; gap: 10px;
+  color: rgba(255,255,255,0.8);
+  padding: 12px 20px;
+  font-size: 0.92rem;
+}
+.sg-sidebar a:hover, .sg-sidebar a.active {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.sg-main {
+  margin-left: var(--sg-sidebar-width);
+  padding: 24px 32px;
+}
+
+.sg-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px;
+}
+
+.sg-welcome-banner {
+  background: linear-gradient(135deg, var(--sg-primary), var(--sg-primary-dark));
+  color: #fff;
+  border-radius: var(--sg-radius);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+
+.sg-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.sg-category-card {
+  background: var(--sg-surface);
+  border: 1px solid var(--sg-border);
+  border-radius: var(--sg-radius);
+  padding: 18px;
+  text-align: center;
+  box-shadow: var(--sg-shadow);
+  transition: transform .15s ease;
+}
+.sg-category-card:hover { transform: translateY(-3px); }
+.sg-category-card .count { color: var(--sg-primary); font-weight: 700; font-size: 1.3rem; }
+
+.sg-scheme-card {
+  background: var(--sg-surface);
+  border: 1px solid var(--sg-border);
+  border-radius: var(--sg-radius);
+  padding: 18px;
+  box-shadow: var(--sg-shadow);
+  margin-bottom: 16px;
+}
+.sg-scheme-card .scheme-row {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sg-scheme-card .scheme-name {
+  font-weight: 600; display: flex; align-items: center; gap: 10px;
+}
+.sg-scheme-card .heart-btn {
+  border: none; background: none; font-size: 1.2rem; cursor: pointer;
+  color: var(--sg-text-muted);
+}
+.sg-scheme-card .heart-btn.active { color: #e0245e; }
+.sg-scheme-logo {
+  width: 44px; height: 44px; border-radius: 8px; object-fit: cover;
+  background: var(--sg-bg);
+}
+.badge-eligible { background: var(--sg-success); }
+.badge-ineligible { background: var(--sg-text-muted); }
+
+/* Chatbot widget */
+.sg-chat-fab {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 58px; height: 58px; border-radius: 50%;
+  background: var(--sg-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; box-shadow: var(--sg-shadow); border: none;
+  z-index: 1050;
+}
+.sg-chat-panel {
+  position: fixed; bottom: 92px; right: 24px;
+  width: 360px; max-height: 520px;
+  background: var(--sg-surface); border-radius: var(--sg-radius);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+  display: none; flex-direction: column; overflow: hidden;
+  z-index: 1050;
+}
+.sg-chat-panel.open { display: flex; }
+.sg-chat-header {
+  background: var(--sg-primary); color: #fff;
+  padding: 14px 16px; display: flex; align-items: center;
+  justify-content: space-between;
+}
+.sg-chat-messages {
+  flex: 1; overflow-y: auto; padding: 14px; background: var(--sg-bg);
+}
+.sg-chat-bubble {
+  max-width: 80%; padding: 10px 12px; border-radius: 10px; margin-bottom: 10px;
+  font-size: 0.88rem; white-space: pre-wrap;
+}
+.sg-chat-bubble.user { background: var(--sg-primary); color: #fff; margin-left: auto; }
+.sg-chat-bubble.bot { background: #fff; border: 1px solid var(--sg-border); }
+.sg-chat-input-row {
+  display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--sg-border);
+}

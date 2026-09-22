@@ -1,0 +1,84 @@
+{# PATH: GovScheme/templates/admin/admin_dashboard.html #}
+{% extends "layouts/dashboard_base.html" %}
+{% block title %}Admin - SmartGov AI{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Admin Dashboard</h4>
+  <form method="post" action="{{ url_for('admin.run_scheme_check') }}">
+    <button class="btn btn-success btn-sm"><i class="bi bi-arrow-repeat"></i> Run Scheme Update Check Now</button>
+  </form>
+</div>
+
+<div class="row g-3 mb-4">
+  {% for label, value in [('Total Citizens', stats.total_citizens), ('Total Schemes', stats.total_schemes),
+                            ('Applications', stats.total_applications), ('Notifications', stats.total_notifications),
+                            ('Candidate Schemes (pending review)', stats.candidate_schemes)] %}
+  <div class="col-md-3">
+    <div class="sg-scheme-card text-center">
+      <div class="count" style="font-size:1.6rem;color:var(--sg-primary);font-weight:700;">{{ value }}</div>
+      <div class="small text-muted-sg">{{ label }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if ml_metrics %}
+<h6>ML Model Performance (from last training run)</h6>
+<div class="table-responsive mb-4">
+<table class="table table-bordered bg-white">
+  <thead class="table-light"><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>P@5</th><th>R@5</th></tr></thead>
+  <tbody>
+    {% for name, m in ml_metrics.results.items() %}
+    <tr class="{{ 'table-success' if name == ml_metrics.best_model }}">
+      <td>{{ name }} {% if name == ml_metrics.best_model %}<span class="badge bg-success">Best</span>{% endif %}</td>
+      <td>{{ '%.4f'|format(m.accuracy) }}</td>
+      <td>{{ '%.4f'|format(m.precision) }}</td>
+      <td>{{ '%.4f'|format(m.recall) }}</td>
+      <td>{{ '%.4f'|format(m.f1_score) }}</td>
+      <td>{{ '%.4f'|format(m.precision_at_5) }}</td>
+      <td>{{ '%.4f'|format(m.recall_at_5) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<div class="small text-muted-sg mb-4">Train citizens: {{ ml_metrics.train_citizens }} · Test citizens: {{ ml_metrics.test_citizens }} · Train records: {{ ml_metrics.train_records }} · Test records: {{ ml_metrics.test_records }}</div>
+{% else %}
+<div class="alert alert-warning">No trained model metrics found. Run <code>python ai/train_model.py</code>.</div>
+{% endif %}
+
+<h6>Recently Discovered / Updated Schemes</h6>
+<div class="table-responsive mb-4">
+<table class="table table-bordered bg-white">
+  <thead class="table-light"><tr><th>Scheme</th><th>Change</th><th>Details</th><th>Checked At</th><th></th></tr></thead>
+  <tbody>
+    {% for u in recent_updates %}
+    <tr>
+      <td>{{ u.scheme_id }}</td>
+      <td><span class="badge {{ 'bg-success' if u.change_type=='NEW' else ('bg-warning text-dark' if u.change_type=='UPDATED' else 'bg-secondary') }}">{{ u.change_type }}</span></td>
+      <td class="small">{{ u.new_value or '—' }}</td>
+      <td class="small">{{ u.checked_at }}</td>
+      <td>
+        {% if u.change_type in ['NEW','UPDATED'] %}
+        <form method="post" action="{{ url_for('admin.verify_scheme', scheme_id=u.scheme_id) }}">
+          <button class="btn btn-sm btn-outline-success">Verify</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="text-center text-muted-sg">No update checks run yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<h6>Automation Log</h6>
+<ul class="small text-muted-sg">
+  {% for log in recent_logs %}
+  <li>[{{ log.run_at }}] {{ log.job_name }} - {{ log.status }}: {{ log.details }}</li>
+  {% else %}
+  <li>No automation runs logged yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

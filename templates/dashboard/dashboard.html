@@ -1,0 +1,86 @@
+{# PATH: GovScheme/templates/dashboard/dashboard.html #}
+{% extends "layouts/dashboard_base.html" %}
+{% block title %}Dashboard - SmartGov AI{% endblock %}
+{% block content %}
+
+<div class="sg-welcome-banner">
+  <h3 class="text-white mb-1">Welcome back, {{ user.full_name.split(' ')[0] if user.full_name else 'Citizen' }} 👋</h3>
+  <div>{{ total_schemes }} government schemes available in SmartGov AI right now.</div>
+</div>
+
+<form class="mb-4" action="{{ url_for('scheme.schemes_list') }}" method="get">
+  <div class="input-group">
+    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+    <input type="text" name="q" class="form-control" placeholder="Search schemes by name, category or keyword...">
+    <button class="btn btn-success" type="submit">Search</button>
+  </div>
+</form>
+
+<h5 class="mb-3">Browse by Category</h5>
+<div class="sg-category-grid">
+  {% for cat in categories %}
+  <a href="{{ url_for('scheme.schemes_list', category=cat.category) }}" class="sg-category-card">
+    <div class="count">{{ cat.scheme_count }}</div>
+    <div class="text-muted-sg small">{{ cat.category }}</div>
+  </a>
+  {% endfor %}
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">Recommended For You</h5>
+  <span class="text-muted-sg small">Model Relevance Score = ML confidence, not a guarantee of approval</span>
+</div>
+
+{% if recommendations %}
+  <div class="row">
+  {% for rec in recommendations %}
+    <div class="col-md-6">
+      <div class="sg-scheme-card">
+        <div class="scheme-row">
+          <div class="scheme-name">
+            <img class="sg-scheme-logo" src="{{ url_for('static', filename='images/schemes/' ~ rec.scheme.scheme_id ~ '.png') }}"
+                 onerror="this.src='{{ url_for('static', filename='images/schemes/default.png') }}'">
+            <a href="{{ url_for('scheme.scheme_details', scheme_id=rec.scheme.scheme_id) }}" class="text-dark">{{ rec.scheme.scheme_name }}</a>
+          </div>
+          <form method="post" action="{{ url_for('scheme.save_scheme' if rec.scheme.scheme_id not in saved_ids else 'scheme.unsave_scheme', scheme_id=rec.scheme.scheme_id) }}">
+            <button class="heart-btn {{ 'active' if rec.scheme.scheme_id in saved_ids }}" type="submit"><i class="bi bi-heart-fill"></i></button>
+          </form>
+        </div>
+        <div class="small text-muted-sg mt-2">{{ rec.scheme.category }} · Relevance {{ rec.relevance_score }}%</div>
+        <span class="badge badge-eligible mt-2">Potentially Eligible</span>
+        <a href="{{ url_for('scheme.scheme_details', scheme_id=rec.scheme.scheme_id) }}" class="btn btn-sm btn-outline-success mt-3">View Details</a>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-info">No recommendations yet based on your current profile. Try completing your profile for better matches.</div>
+{% endif %}
+
+<h5 class="mt-4 mb-3">Saved Schemes</h5>
+{% if saved_schemes %}
+  <div class="row">
+  {% for s in saved_schemes %}
+    <div class="col-md-6">
+      <div class="sg-scheme-card">
+        <div class="scheme-row">
+          <div class="scheme-name">
+            <img class="sg-scheme-logo" src="{{ url_for('static', filename='images/schemes/' ~ s.scheme_id ~ '.png') }}"
+                 onerror="this.src='{{ url_for('static', filename='images/schemes/default.png') }}'">
+            <a href="{{ url_for('scheme.scheme_details', scheme_id=s.scheme_id) }}" class="text-dark">{{ s.scheme_name }}</a>
+          </div>
+          <form method="post" action="{{ url_for('scheme.unsave_scheme', scheme_id=s.scheme_id) }}">
+            <button class="heart-btn active" type="submit"><i class="bi bi-heart-fill"></i></button>
+          </form>
+        </div>
+        <div class="small text-muted-sg mt-2">{{ s.category }}</div>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+{% else %}
+  <div class="text-muted-sg small">You haven't saved any schemes yet.</div>
+{% endif %}
+
+<div class="alert alert-warning mt-4 small">{{ disclaimer }}</div>
+{% endblock %}

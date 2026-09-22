@@ -1,0 +1,13 @@
+# PATH: GovScheme/requirements.txt
+Flask==3.0.3
+Werkzeug==3.0.4
+python-dotenv==1.0.1
+pandas==2.2.2
+openpyxl==3.1.5
+numpy==1.26.4
+scikit-learn==1.5.1
+joblib==1.4.2
+APScheduler==3.10.4
+requests==2.32.3
+beautifulsoup4==4.12.3
+pytest==8.3.2

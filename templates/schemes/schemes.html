@@ -1,0 +1,48 @@
+{# PATH: GovScheme/templates/schemes/schemes.html #}
+{% extends "layouts/dashboard_base.html" %}
+{% block title %}Schemes - SmartGov AI{% endblock %}
+{% block content %}
+
+<h4 class="mb-3">Government Schemes</h4>
+
+<form class="row g-2 mb-4" method="get">
+  <div class="col-md-6">
+    <input type="text" name="q" value="{{ keyword }}" class="form-control" placeholder="Search by name, category or keyword...">
+  </div>
+  <div class="col-md-4">
+    <select name="category" class="form-select">
+      <option value="">All Categories</option>
+      {% for cat in categories %}
+        <option value="{{ cat.category }}" {{ 'selected' if cat.category == category }}>{{ cat.category }} ({{ cat.scheme_count }})</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-success w-100" type="submit">Filter</button>
+  </div>
+</form>
+
+<div class="row">
+{% for s in schemes %}
+  <div class="col-md-6">
+    <div class="sg-scheme-card">
+      <div class="scheme-row">
+        <div class="scheme-name">
+          <img class="sg-scheme-logo" src="{{ url_for('static', filename='images/schemes/' ~ s.scheme_id ~ '.png') }}"
+               onerror="this.src='{{ url_for('static', filename='images/schemes/default.png') }}'">
+          <a href="{{ url_for('scheme.scheme_details', scheme_id=s.scheme_id) }}" class="text-dark">{{ s.scheme_name }}</a>
+        </div>
+        <form method="post" action="{{ url_for('scheme.save_scheme' if s.scheme_id not in saved_ids else 'scheme.unsave_scheme', scheme_id=s.scheme_id) }}">
+          <button class="heart-btn {{ 'active' if s.scheme_id in saved_ids }}" type="submit"><i class="bi bi-heart-fill"></i></button>
+        </form>
+      </div>
+      <div class="small text-muted-sg mt-2">{{ s.category }}</div>
+      <span class="badge {{ 'badge-eligible' if s.eligibility_badge == 'Potentially Eligible' else 'badge-ineligible' }} mt-2">{{ s.eligibility_badge }}</span>
+      <a href="{{ url_for('scheme.scheme_details', scheme_id=s.scheme_id) }}" class="btn btn-sm btn-outline-success mt-3">View Details</a>
+    </div>
+  </div>
+{% else %}
+  <div class="alert alert-info">No schemes matched your search.</div>
+{% endfor %}
+</div>
+{% endblock %}
